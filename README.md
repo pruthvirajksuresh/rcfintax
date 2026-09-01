@@ -1,10 +1,15 @@
 # RC Fintax Services
 
-Modern static one-page website for RC Fintax Services, designed to deploy from the repository root on GitHub Pages.
+Modern static website for RC Fintax Services, designed to deploy from the repository root on GitHub Pages.
 
 ## Files
 
-- `index.html` - page content and structure
+- `index.html` - homepage
+- `services.html` - finance service details
+- `courses.html` - Accounting, Tally, GST, TDS and Income Tax courses
+- `sap-training.html` - dedicated SAP Training page
+- `about.html` - business overview
+- `contact.html` - enquiry and contact details
 - `styles.css` - responsive styling
 - `script.js` - mobile navigation toggle
 - `assets/hero-training.jpg` - original hero image asset
