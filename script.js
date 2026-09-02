@@ -1,6 +1,7 @@
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
 const revealItems = document.querySelectorAll(".reveal");
+const leadForm = document.querySelector("#lead-form");
 
 if (navToggle && nav) {
   navToggle.addEventListener("click", () => {
@@ -17,6 +18,27 @@ if (navToggle && nav) {
       navToggle.setAttribute("aria-expanded", "false");
       navToggle.setAttribute("aria-label", "Open menu");
     }
+  });
+}
+
+if (leadForm) {
+  leadForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(leadForm);
+    const name = (formData.get("name") || "").toString().trim();
+    const phone = (formData.get("phone") || "").toString().trim();
+    const course = (formData.get("course") || "").toString().trim();
+    const mode = (formData.get("mode") || "").toString().trim();
+
+    if (!name || !phone || !course || !mode) {
+      leadForm.reportValidity();
+      return;
+    }
+
+    const message = `Hello RC Fintax, I want to enquire about *${course}* for *${mode}* mode. My name is ${name} and my phone number is ${phone}.`;
+    const whatsappUrl = `https://wa.me/919353791842?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   });
 }
 
