@@ -17,10 +17,14 @@ if (navToggle && nav && header) {
   });
   nav.addEventListener("click", (event) => {
     // Icons inside links must close the menu just like their text.
-    if (event.target instanceof Element && event.target.closest("a")) setOpen(false);
+    if (event.target instanceof Element && event.target.closest("a"))
+      setOpen(false);
   });
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && navToggle.getAttribute("aria-expanded") === "true") {
+    if (
+      event.key === "Escape" &&
+      navToggle.getAttribute("aria-expanded") === "true"
+    ) {
       setOpen(false, true);
     }
   });
@@ -44,28 +48,41 @@ const topics = new Map([
   ["digital-statutory", "Digital Signature and ESI / PF support"],
   ["general", "Finance services and training"],
 ]);
-const topic = topics.get(new URLSearchParams(window.location.search).get("topic"));
+const topic = topics.get(
+  new URLSearchParams(window.location.search).get("topic"),
+);
 const topicLabel = document.querySelector("#contact-topic");
 const context = document.querySelector("#contact-context");
 if (topic && topicLabel && context) {
   topicLabel.textContent = topic;
   context.hidden = false;
-  const message = "Hello RC Fintax, I would like to enquire about " + topic + ".";
+  const message =
+    "Hello RC Fintax, I would like to enquire about " + topic + ".";
   const whatsapp = document.querySelector("#enquiry-whatsapp");
   const email = document.querySelector("#enquiry-email");
-  if (whatsapp) whatsapp.href = "https://wa.me/919353791842?text=" + encodeURIComponent(message);
-  if (email) email.href = "mailto:rcinsuranceservice@gmail.com?subject=" + encodeURIComponent("Enquiry: " + topic);
+  if (whatsapp)
+    whatsapp.href =
+      "https://wa.me/919353791842?text=" + encodeURIComponent(message);
+  if (email)
+    email.href =
+      "mailto:rcinsuranceservice@gmail.com?subject=" +
+      encodeURIComponent("Enquiry: " + topic);
 }
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 if (!reduceMotion.matches && "IntersectionObserver" in window) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 },
+  );
+  document
+    .querySelectorAll(".reveal")
+    .forEach((item) => observer.observe(item));
 }
