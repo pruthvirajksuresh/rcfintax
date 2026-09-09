@@ -313,6 +313,20 @@ body {
   color: rgba(255, 255, 255, 0.84);
   transition: color 0.2s ease;
 }
+.whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+}
+.whatsapp-icon {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+.utility-links .whatsapp-icon,
+.button-secondary .whatsapp-icon {
+  filter: invert(1);
+}
 .utility-links a:hover {
   color: var(--gold);
 }
@@ -813,24 +827,25 @@ h1 {
   color: #9a6c00;
   background: #fff0bd;
 }
-.course-sap {
+/* Keep the SAP theme above the shared course-card defaults. */
+.course-card.course-sap {
   color: #fff;
   background: var(--navy);
   border-color: var(--navy);
 }
-.course-sap p,
-.course-sap li {
+.course-card.course-sap p,
+.course-card.course-sap li {
   color: rgba(255, 255, 255, 0.75);
 }
-.course-sap ul {
+.course-card.course-sap ul {
   border-color: rgba(255, 255, 255, 0.2);
 }
-.course-sap h3,
-.course-sap .course-footer strong {
+.course-card.course-sap h3,
+.course-card.course-sap .course-footer strong {
   color: #fff;
 }
-.course-sap .course-label,
-.course-sap .course-footer a {
+.course-card.course-sap .course-label,
+.course-card.course-sap .course-footer a {
   color: var(--gold);
 }
 .sap-mark {
