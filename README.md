@@ -41,4 +41,6 @@ Desktop and mobile layout checks are separate browser checks. The navigation rem
 
 ## Sharing Artwork
 
-`assets/social-preview.png` was generated with the built-in image tool. Brief: a restrained white, navy and gold RC Fintax Services sharing card, featuring “Accounting, Tax & SAP Training”, “Tally | GST | TDS | Income Tax | S/4HANA FICO”, and “Mandya, Karnataka”; no people, premises, prices or accreditation claims.
+`assets/social-preview.png` was generated with the built-in image tool. Brief: a restrained white, navy and gold RC Fintax Services sharing card, featuring “Accounting, Tax & SAP Training”, “Tally | GST | TDS | Income Tax | S/4HANA FICO”, and “Serving Karnataka”; no people, premises, prices or accreditation claims. The location line was subsequently edited to reflect statewide coverage while preserving the other artwork.
+
+Service-area messaging and metadata describe coverage across Karnataka. Mandya is retained only in the physical office address and Maps search, not as a limit on the service area.
