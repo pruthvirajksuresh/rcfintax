@@ -37,6 +37,74 @@ if (navToggle && nav && header) {
   mobileNavigation.addEventListener("change", () => setOpen(false));
 }
 
+const serviceBrowser = document.querySelector(".service-browser");
+if (serviceBrowser) {
+  const tablist = serviceBrowser.querySelector(".service-tabs");
+  const tabs = Array.from(tablist.querySelectorAll("a"));
+  const panels = tabs.map((tab) =>
+    document.getElementById(tab.getAttribute("href").slice(1)),
+  );
+
+  tablist.setAttribute("role", "tablist");
+  tabs.forEach((tab, index) => {
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-controls", panels[index].id);
+    panels[index].setAttribute("role", "tabpanel");
+    panels[index].setAttribute("aria-labelledby", tab.id);
+    panels[index].tabIndex = 0;
+  });
+
+  const activate = (index, { focus = false, updateUrl = false } = {}) => {
+    tabs.forEach((tab, position) => {
+      const selected = position === index;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      panels[position].hidden = !selected;
+    });
+    if (focus) tabs[index].focus();
+    const hash = "#" + panels[index].id;
+    if (updateUrl && window.location.hash !== hash) {
+      window.history.pushState(null, "", hash);
+    }
+  };
+  const syncWithUrl = () => {
+    const index = panels.findIndex(
+      (panel) => "#" + panel.id === window.location.hash,
+    );
+    const selected = index < 0 ? 0 : index;
+    const focusWouldBeHidden = panels.some(
+      (panel, position) =>
+        position !== selected && panel.contains(document.activeElement),
+    );
+    activate(selected, { focus: focusWouldBeHidden });
+  };
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", (event) => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
+        return;
+      event.preventDefault();
+      activate(index, { focus: true, updateUrl: true });
+    });
+    tab.addEventListener("keydown", (event) => {
+      let next;
+      if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      if (event.key === "ArrowLeft")
+        next = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === "Home") next = 0;
+      if (event.key === "End") next = tabs.length - 1;
+      if (event.key === " ") next = index;
+      if (next === undefined) return;
+      event.preventDefault();
+      activate(next, { focus: true, updateUrl: true });
+    });
+  });
+  syncWithUrl();
+  serviceBrowser.classList.add("tabs-ready");
+  window.addEventListener("hashchange", syncWithUrl);
+  window.addEventListener("popstate", syncWithUrl);
+}
+
 // Only recognized topics can populate enquiry text and external link drafts.
 const topics = new Map([
   ["tally", "Accounting with Tally"],

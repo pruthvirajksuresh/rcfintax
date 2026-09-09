@@ -203,3 +203,114 @@ test("unknown enquiry topics cannot insert content or change destinations", () =
   );
   dom.window.close();
 });
+
+test("service tabs select one panel and preserve each service enquiry link", () => {
+  const { dom, document, window } = interactive("services.html");
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  assert.equal(tabs.length, 4);
+  assert.equal(
+    document.querySelector('[aria-selected="true"]').id,
+    "tab-accounting-tax",
+  );
+  for (const tab of tabs) {
+    tab.click();
+    const panel = document.getElementById(tab.getAttribute("aria-controls"));
+    assert.equal(
+      document.querySelectorAll(".service-panel:not([hidden])").length,
+      1,
+    );
+    assert.equal(panel.hidden, false);
+    assert.equal(tab.getAttribute("aria-selected"), "true");
+    assert.equal(tab.tabIndex, 0);
+    assert.equal(panel.getAttribute("aria-labelledby"), tab.id);
+    assert.equal(window.location.hash, "#" + panel.id);
+    assert.equal(
+      panel.querySelector(".button").getAttribute("href"),
+      "contact.html?topic=" + panel.id,
+    );
+  }
+  dom.window.close();
+});
+
+test("service deep links open the right tab and unknown fragments use the default", () => {
+  for (const id of [
+    "accounting-tax",
+    "compliance",
+    "finance",
+    "digital-statutory",
+    "unknown",
+  ]) {
+    const { dom, document } = interactive("services.html", "#" + id);
+    const expected = id === "unknown" ? "accounting-tax" : id;
+    assert.equal(
+      document.querySelector(".service-panel:not([hidden])").id,
+      expected,
+    );
+    assert.equal(
+      document.querySelector('[aria-selected="true"]').id,
+      "tab-" + expected,
+    );
+    dom.window.close();
+  }
+});
+
+test("service tabs support arrow keys, Home, End and roving keyboard focus", () => {
+  const { dom, document, window } = interactive("services.html");
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const press = (index, key, expected) => {
+    tabs[index].dispatchEvent(
+      new window.KeyboardEvent("keydown", {
+        key,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    assert.equal(document.activeElement, tabs[expected]);
+    assert.equal(tabs[expected].getAttribute("aria-selected"), "true");
+    assert.equal(tabs.filter((tab) => tab.tabIndex === 0).length, 1);
+  };
+  press(0, "ArrowLeft", 3);
+  press(3, "ArrowRight", 0);
+  press(0, "End", 3);
+  press(3, "Home", 0);
+  press(0, "ArrowRight", 1);
+  dom.window.close();
+});
+
+test("browser history and hash changes restore the selected service", async () => {
+  const { dom, document, window } = interactive(
+    "services.html",
+    "#accounting-tax",
+  );
+  const tabs = document.querySelectorAll('[role="tab"]');
+  tabs[1].click();
+  tabs[2].click();
+  document.querySelector("#finance .button").focus();
+  const changed = (event) =>
+    new Promise((resolve) =>
+      window.addEventListener(event, resolve, { once: true }),
+    );
+  let navigation = changed("popstate");
+  window.history.back();
+  await navigation;
+  assert.equal(document.activeElement, tabs[1]);
+  assert.equal(
+    document.querySelector(".service-panel:not([hidden])").id,
+    "compliance",
+  );
+  navigation = changed("popstate");
+  window.history.forward();
+  await navigation;
+  assert.equal(
+    document.querySelector(".service-panel:not([hidden])").id,
+    "finance",
+  );
+  navigation = changed("hashchange");
+  window.location.hash = "#digital-statutory";
+  await navigation;
+  assert.equal(
+    document.querySelector(".service-panel:not([hidden])").id,
+    "digital-statutory",
+  );
+  dom.window.close();
+});
